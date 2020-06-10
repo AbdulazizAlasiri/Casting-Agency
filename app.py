@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from models import Movie, Actor ,setup_db
+from models import Movie, Actor ,setup_db,db_drop_and_create_all
 from auth import AuthError, requires_auth
 import json
 
@@ -25,7 +25,11 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
-
+    '''
+    !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
+    !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
+    '''
+    db_drop_and_create_all()
 
     '''
     actors 
@@ -270,10 +274,6 @@ def internal_server_error(error):
     }), 500
 
 
-'''
-@TODO implement error handler for AuthError
-    error handler should conform to general task above 
-'''
 @app.errorhandler(AuthError)
 def authentification_failed(AuthError):
     return jsonify({
