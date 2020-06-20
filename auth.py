@@ -8,7 +8,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'abdulaziz.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'Casting-Agency'
+API_AUDIENCE = 'casting-agency'
 
 # AuthError Exception
 '''
@@ -24,7 +24,6 @@ class AuthError(Exception):
 
 
 # Auth Header
-
 
 
 def get_token_auth_header():
@@ -59,8 +58,6 @@ def get_token_auth_header():
     return token
 
 
-
-
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -75,7 +72,6 @@ def check_permissions(permission, payload):
             'description': 'Permission not found.'
         }, 401)
     return True
-
 
 
 
@@ -131,6 +127,7 @@ def verify_decode_jwt(token):
         'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
     }, 400)
+
 
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
