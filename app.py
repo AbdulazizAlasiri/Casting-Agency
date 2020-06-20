@@ -5,10 +5,9 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from models import Movie, Actor ,setup_db,db_drop_and_create_all
+from models import Movie, Actor, setup_db, db_drop_and_create_all, insert_data
 from auth import AuthError, requires_auth
 import json
-
 
 
 #----------------------------------------------------------------------------#
@@ -17,7 +16,6 @@ import json
 
 EXCITED = os.environ['EXCITED']
 # OBJECT_PER_PAGE=10
-
 
 
 #----------------------------------------------------------------------------#
@@ -37,9 +35,9 @@ EXCITED = os.environ['EXCITED']
 
 def create_app(test_config=None):
 
-#----------------------------------------------------------------------------#
-# Conf.
-#----------------------------------------------------------------------------#
+    #----------------------------------------------------------------------------#
+    # Conf.
+    #----------------------------------------------------------------------------#
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
@@ -49,26 +47,25 @@ def create_app(test_config=None):
     !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
     '''
     db_drop_and_create_all()
+    insert_data()
 
 #----------------------------------------------------------------------------#
 # Routes.
 #----------------------------------------------------------------------------#
 
-
-
     #----------------------------------------------------------------------------#
     # Actors.
-    
+
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actors():
-        actors_selection=Actor.query.order_by('id').all()
-        formated_actors=[actor.format() for actor in actors_selection]
+    def get_actors(paylode):
+        actors_selection = Actor.query.order_by('id').all()
+        formated_actors = [actor.format() for actor in actors_selection]
 
         return jsonify({
             'success': True,
             'actors': formated_actors,
-            'total_actors':len(actors_selection)
+            'total_actors': len(actors_selection)
         })
 
     @app.route('/actors', methods=['POST'])
@@ -82,10 +79,10 @@ def create_app(test_config=None):
         birth_year = body.get('birth_year', None)
         gender = body.get('gender', None)
 
-        if not name :
+        if not name:
             abort(400)
         try:
-            actor = Actor(name=name, birth_year=birth_year,gender=gender)
+            actor = Actor(name=name, birth_year=birth_year, gender=gender)
 
             actor.insert()
 
@@ -133,7 +130,7 @@ def create_app(test_config=None):
         if actor is None:
             abort(404)
         try:
-            formated_actor=[actor.format()]
+            formated_actor = [actor.format()]
             actor.delete()
             return jsonify({
                 'success': True,
@@ -169,14 +166,14 @@ def create_app(test_config=None):
 
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
-    def get_movies():
-        movies_selection=Movie.query.order_by('id').all()
-        formated_movies=[movie.format() for movie in movies_selection]
+    def get_movies(paylode):
+        movies_selection = Movie.query.order_by('id').all()
+        formated_movies = [movie.format() for movie in movies_selection]
 
         return jsonify({
             'success': True,
             'movies': formated_movies,
-            'total_movies':len(movies_selection)
+            'total_movies': len(movies_selection)
         })
 
     @app.route('/movies', methods=['POST'])
@@ -238,7 +235,7 @@ def create_app(test_config=None):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if movie is None:
             abort(404)
-        formated_movie=[movie.format()]
+        formated_movie = [movie.format()]
         try:
             movie.delete()
             return jsonify({
@@ -248,8 +245,6 @@ def create_app(test_config=None):
 
         except:
             abort(400)
-
-
 
     #----------------------------------------------------------------------------#
     # Movie_Actors.
@@ -265,13 +260,13 @@ def create_app(test_config=None):
         if movie is None:
             abort(404)
 
-        formated_actors=[actor.format() for actor in movie.actors]
+        formated_actors = [actor.format() for actor in movie.actors]
         try:
 
             return jsonify({
                 'success': True,
                 'actors': formated_actors,
-                'total_actors':len(formated_actors)
+                'total_actors': len(formated_actors)
             })
 
         except:
@@ -294,9 +289,9 @@ def create_app(test_config=None):
 
         actor_id = body.get('actor_id', None)
 
-        if not actor_id :
+        if not actor_id:
             abort(400)
-        
+
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         if actor is None:
             abort(404)
@@ -306,7 +301,8 @@ def create_app(test_config=None):
             abort(404)
         try:
             movie.actors.append(actor)
-            formated_actor=[actor.format()]
+            movie.update()
+            formated_actor = [actor.format()]
             return jsonify({
                 'success': True,
                 'actors': formated_actor,
@@ -320,7 +316,7 @@ def create_app(test_config=None):
     '''
     @app.route('/movies/<int:movie_id>/actors', methods=['DELETE'])
     @requires_auth('remove:actors')
-    def add_actors_to_movie(paylode, movie_id):
+    def remove_actors_from_movie(paylode, movie_id):
 
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if movie is None:
@@ -332,9 +328,9 @@ def create_app(test_config=None):
 
         actor_id = body.get('actor_id', None)
 
-        if not actor_id :
+        if not actor_id:
             abort(400)
-        
+
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         if actor is None:
             abort(404)
@@ -344,7 +340,8 @@ def create_app(test_config=None):
             abort(404)
         try:
             movie.actors.remove(actor)
-            formated_actor=[actor.format()]
+            movie.update()
+            formated_actor = [actor.format()]
             return jsonify({
                 'success': True,
                 'actors': formated_actor,
@@ -356,15 +353,27 @@ def create_app(test_config=None):
     @app.route('/')
     def get_greeting():
 
-        greeting = "Hello" 
-        if EXCITED == 'true': greeting = greeting + "!!!!!"
+        greeting = "Hello"
+        if EXCITED == 'true':
+            greeting = greeting + "!!!!!"
         return greeting
 
-    # @app.route('/coolkids')
-    # def be_cool():
-    #     return "Be cool, man, be coooool! You're almost a FSND grad!"
+    '''
+    this endpoint was made for the reviwer to help him test useing postman
+    it will drop and create all tables and insert some data
+    '''
+    @app.route('/setup-database')
+    def setup_database():
+
+        db_drop_and_create_all()
+        insert_data()
+
+        return jsonify({
+            'success': True,
+        })
 
     return app
+
 
 app = create_app()
 
