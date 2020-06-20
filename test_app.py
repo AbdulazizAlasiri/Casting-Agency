@@ -1,4 +1,6 @@
 
+# this test to test casting-agency localy if you want to test it in prodaction use postman
+
 import os
 import unittest
 import json
@@ -13,25 +15,22 @@ EXEC_PROD_TOKEN = os.environ['EXEC_PROD_TOKEN']
 CAST_DIR_TOKEN = os.environ['CAST_DIR_TOKEN']
 CAST_ASST_TOKEN = os.environ['CAST_ASST_TOKEN']
 
+
 class CastingAgencyCase(unittest.TestCase):
 
-    'Test localy'
-
-    database_name = "test"
-    password = "12"
-    database_path = "postgres://postgres:{}@{}/{}".format(password,
-                                                                'localhost:5432', database_name)
     # database_path=os.environ['DATABASE_URL']
+
+    # this function to add some values to the test database
 
     def insert_data(self):
         """Seed test database with initial data"""
-        actor1 = Actor(name="Actor One", age=2001, gender='m')
-        actor2 = Actor(name="Actor Two", age=2002, gender='f')
-        actor3 = Actor(name="Actor Three", age=2003, gender='f')
+        actor1 = Actor(name="Actor One", birth_year=2001, gender='m')
+        actor2 = Actor(name="Actor Two", birth_year=2002, gender='f')
+        actor3 = Actor(name="Actor Three", birth_year=2003, gender='f')
 
-        movie1 = Movie(title="Movie One", release_date=2011)
-        movie2 = Movie(title="The Two", release_date=2012)
-        movie3 = Movie(title="The Three", release_date=2013)
+        movie1 = Movie(title="The One", release_date='2001-4-23')
+        movie2 = Movie(title="The Two", release_date='2002-4-21')
+        movie3 = Movie(title="The Three", release_date='2003-4-23')
 
         movie1.actors.append(actor1)
         movie1.actors.append(actor2)
@@ -47,10 +46,6 @@ class CastingAgencyCase(unittest.TestCase):
         self.db.session.commit()
         self.db.session.close()
 
-        
-
-
-
 # ---------------------------------------------------------------------------------
 # ------------------------------ SETUP TESTS --------------------------------------
 # ---------------------------------------------------------------------------------
@@ -60,20 +55,28 @@ class CastingAgencyCase(unittest.TestCase):
         self.app = create_app()
 
         self.client = self.app.test_client
-        self.prod_headers = {"Authorization": "Bearer {}".format(EXEC_PROD_TOKEN)}
-        self.dir_headers = {"Authorization": "Bearer {}".format(CAST_DIR_TOKEN)}
-        self.asst_headers = {"Authorization": "Bearer {}".format(CAST_ASST_TOKEN)}
+        self.prod_headers = {
+            "Authorization": "Bearer {}".format(EXEC_PROD_TOKEN)}
+        self.dir_headers = {
+            "Authorization": "Bearer {}".format(CAST_DIR_TOKEN)}
+        self.asst_headers = {
+            "Authorization": "Bearer {}".format(CAST_ASST_TOKEN)}
 
+        'Test localy'
 
-        setup_db(self.app, database_path=database_path)
-        # setup_db(self.app, database_path=prod_test_database_path)
+        self.database_name = "test"
+        self.password = "12"
+        self.database_path = "postgres://postgres:{}@{}/{}".format(self.password,
+                                                                   'localhost:5432', self.database_name)
+
+        setup_db(self.app, self.database_path)
 
         with self.app.app_context():
-            self.db = db
+            self.db = SQLAlchemy()
 
+            # remove the folowing three lines if you want to test on existing database
             self.db.drop_all()
             self.db.create_all()
-
             self.insert_data()
 
     def tearDown(self):
@@ -108,8 +111,8 @@ class CastingAgencyCase(unittest.TestCase):
 
     def test_post_actors_with_NO_HEADERS(self):
         res = self.client().post('/actors', json={
-            'name': 'Tom Smith',
-            'age': 34,
+            'name': 'Test Actor1',
+            'birth_year': 1998,
             'gender': 'm'
         })
         body = json.loads(res.data)
@@ -118,8 +121,8 @@ class CastingAgencyCase(unittest.TestCase):
 
     def test_patch_actors_with_NO_HEADERS(self):
         res = self.client().patch('/actors/4', json={
-            'name': 'Jane Smith',
-            'age': 24,
+            'name': 'Test Actor2',
+            'birth_year': 1988,
             'gender': 'f'
         })
         body = json.loads(res.data)
@@ -143,6 +146,7 @@ class CastingAgencyCase(unittest.TestCase):
 # ------------------------------- PRODUCER ACTORS ---------------------------------
 # ---------------------------------------------------------------------------------
 
+
     def test_get_actors(self):
         res = self.client().get(
             '/actors', headers=self.prod_headers)
@@ -155,8 +159,8 @@ class CastingAgencyCase(unittest.TestCase):
 
     def test_post_actors(self):
         res = self.client().post('/actors', headers=self.prod_headers, json={
-            'name': 'Tom Smith',
-            'age': 34,
+            'name': 'Test Actor3',
+            'birth_year': 1998,
             'gender': 'm'
         })
         body = json.loads(res.data)
@@ -165,9 +169,8 @@ class CastingAgencyCase(unittest.TestCase):
 
     def test_patch_actors(self):
         res = self.client().patch('/actors/2', headers=self.prod_headers, json={
-            'name': 'Jane Smith',
-            'age': 24,
-            'gender': 'f'
+            'name': 'Test Actor4',
+            'birth_year': 1999
         })
         body = json.loads(res.data)
         actors = body['actors']
@@ -204,7 +207,7 @@ class CastingAgencyCase(unittest.TestCase):
     def test_post_actors(self):
         res = self.client().post('/actors', headers=self.dir_headers, json={
             'name': 'Tom Smith',
-            'age': 34,
+            'birth_year': 34,
             'gender': 'm'
         })
         body = json.loads(res.data)
@@ -214,7 +217,7 @@ class CastingAgencyCase(unittest.TestCase):
     def test_patch_actors(self):
         res = self.client().patch('/actors/2', headers=self.dir_headers, json={
             'name': 'Jane Smith',
-            'age': 24,
+            'birth_year': 24,
             'gender': 'f'
         })
         body = json.loads(res.data)
@@ -236,10 +239,10 @@ class CastingAgencyCase(unittest.TestCase):
         self.assertEqual(body['success'], True)
 
 
-
 # ---------------------------------------------------------------------------------
 # ------------------------------ ASSISTANT ACTORS ---------------------------------
 # ---------------------------------------------------------------------------------
+
 
     def test_get_actors(self):
         res = self.client().get(
@@ -255,7 +258,7 @@ class CastingAgencyCase(unittest.TestCase):
         """ FAILS: 401 - UNAUTHORIZED """
         res = self.client().post('/actors', headers=self.asst_headers, json={
             'name': 'Tom Smith',
-            'age': 34,
+            'birth_year': 34,
             'gender': 'm'
         })
 
@@ -265,7 +268,7 @@ class CastingAgencyCase(unittest.TestCase):
         """ FAILS: 401 - UNAUTHORIZED """
         res = self.client().patch('/actors/2', headers=self.asst_headers, json={
             'name': 'Jane Smith',
-            'age': 24,
+            'birth_year': 24,
             'gender': 'f'
         })
 
@@ -287,6 +290,7 @@ class CastingAgencyCase(unittest.TestCase):
 # ---------------------------------------------------------------------------------
 # --------------------------- UNAUTHENTICATED MOVIES ------------------------------
 # ---------------------------------------------------------------------------------
+
 
     def test_get_movies_with_NO_HEADERS(self):
         res = self.client().get('/movies')
@@ -460,6 +464,7 @@ class CastingAgencyCase(unittest.TestCase):
         res = self.client().delete('/movies/2', headers=self.asst_headers)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
