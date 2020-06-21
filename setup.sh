@@ -1,6 +1,6 @@
 #!/bin/sh
 export EXCITED='true'
-export  DATABASE_URL='postgres://jqxhcwztskiwuh:0a377e5d7308387b4dc7dc0614cfaacacfecea5e02c0f0adfe27beacf72438a7@ec2-3-222-30-53.compute-1.amazonaws.com:5432/d3r5bfiqp5ogsi'
+export  DATABASE_URL='postgres://zgcogiqvtttruh:94e37c27fc3b3ec6684dc9e55b41731405fc73bda194de674bb0cda150c4816e@ec2-52-202-146-43.compute-1.amazonaws.com:5432/da09kh79bpa68s'
 
 export AUTH0_DOMAIN='abdulaziz.auth0.com'
 export AUTH0_CLIENTID='2BEKoaW9JcIl6Yql1VgFX6nvWrmp94CQ'

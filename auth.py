@@ -1,14 +1,15 @@
 import json
 import base64
+import os
 from flask import request, _request_ctx_stack
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
 
-AUTH0_DOMAIN = 'abdulaziz.auth0.com'
+AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'casting-agency'
+API_AUDIENCE = os.environ['API_AUDIENCE']
 
 # AuthError Exception
 '''
