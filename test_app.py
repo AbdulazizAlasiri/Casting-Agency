@@ -1,5 +1,4 @@
-
-# this test to test casting-agency localy if you want to test it in prodaction use postman
+# test casting-agency localy if you want to test it in prodaction use postman
 
 import os
 import unittest
@@ -47,7 +46,7 @@ class CastingAgencyCase(unittest.TestCase):
         self.db.session.close()
 
 # ---------------------------------------------------------------------------------
-# ------------------------------ SETUP TESTS --------------------------------------
+# SETUP TESTS
 # ---------------------------------------------------------------------------------
 
     def setUp(self):
@@ -81,33 +80,22 @@ class CastingAgencyCase(unittest.TestCase):
 
     def tearDown(self):
         """Runs cleanup after each test"""
-        self.db.session.rollback()
-        self.db.drop_all()
-        self.db.session.close()
         pass
 
-# ---------------------------------------------------------------------------------
-# --------------------------------- TEST DB ---------------------------------------
-# ---------------------------------------------------------------------------------
-
-    def test_seed_testdb(self):
-        """Test Seed Data in Db"""
-        actors = Actor.query.all()  # check of actors is a list of Actors
-        self.assertEqual(isinstance(actors, list), True)
-        self.assertEqual(isinstance(actors[0], Actor), True)
-        movies = Movie.query.all()  # check of movies is a list of Movies
-        self.assertEqual(isinstance(movies, list), True)
-        self.assertEqual(isinstance(movies[0], Movie), True)
 
 # ---------------------------------------------------------------------------------
-# ------------------------ UNAUTHENTICATED ACTORS ---------------------------------
+# ACTORS.
 # ---------------------------------------------------------------------------------
+
+
+    # -----------------------------------------------------------------------------
+    # Without headers
 
     def test_get_actors_with_NO_HEADERS(self):
         res = self.client().get('/actors')
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
     def test_post_actors_with_NO_HEADERS(self):
         res = self.client().post('/actors', json={
@@ -117,7 +105,7 @@ class CastingAgencyCase(unittest.TestCase):
         })
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
     def test_patch_actors_with_NO_HEADERS(self):
         res = self.client().patch('/actors/4', json={
@@ -127,30 +115,22 @@ class CastingAgencyCase(unittest.TestCase):
         })
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
-
-    def test_get_actors_with_NO_HEADERS(self):
-        res = self.client().get('/actors/4')
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
     def test_delete_actors_with_NO_HEADERS(self):
         res = self.client().delete('/actors/4')
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
 
-# ---------------------------------------------------------------------------------
-# ------------------------------- PRODUCER ACTORS ---------------------------------
-# ---------------------------------------------------------------------------------
 
+    # -----------------------------------------------------------------------------
+    # Executive Producer role
 
     def test_get_actors(self):
         res = self.client().get(
             '/actors', headers=self.prod_headers)
-
         body = json.loads(res.data)
         actors = body['actors']
         self.assertEqual(res.status_code, 200)
@@ -173,16 +153,10 @@ class CastingAgencyCase(unittest.TestCase):
             'birth_year': 1999
         })
         body = json.loads(res.data)
-        actors = body['actors']
+        actors = body['actor']
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
         self.assertEqual(isinstance(actors, list), True)
-
-    def test_get_actors(self):
-        res = self.client().get('/actors/2', headers=self.prod_headers)
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(body['success'], True)
 
     def test_delete_actors(self):
         res = self.client().delete('/actors/2', headers=self.prod_headers)
@@ -190,9 +164,8 @@ class CastingAgencyCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-# ---------------------------------------------------------------------------------
-# ------------------------------- DIRECTOR ACTORS ---------------------------------
-# ---------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # Casting Director role
 
     def test_get_actors(self):
         res = self.client().get(
@@ -226,23 +199,14 @@ class CastingAgencyCase(unittest.TestCase):
         self.assertEqual(body['success'], True)
         self.assertEqual(isinstance(actors, list), True)
 
-    def test_get_actors(self):
-        res = self.client().get('/actors/2', headers=self.dir_headers)
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(body['success'], True)
-
     def test_delete_actors(self):
         res = self.client().delete('/actors/2', headers=self.dir_headers)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-
-# ---------------------------------------------------------------------------------
-# ------------------------------ ASSISTANT ACTORS ---------------------------------
-# ---------------------------------------------------------------------------------
-
+    # -----------------------------------------------------------------------------
+    # Casting Assistant role
 
     def test_get_actors(self):
         res = self.client().get(
@@ -274,12 +238,6 @@ class CastingAgencyCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
 
-    def test_get_actors(self):
-        res = self.client().get('/actors/2', headers=self.asst_headers)
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(body['success'], True)
-
     def test_delete_actors(self):
         """ FAILS: 401 - UNAUTHORIZED """
         res = self.client().delete('/actors/2', headers=self.asst_headers)
@@ -288,49 +246,44 @@ class CastingAgencyCase(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------------
-# --------------------------- UNAUTHENTICATED MOVIES ------------------------------
+# MOVIES
 # ---------------------------------------------------------------------------------
 
+    # -----------------------------------------------------------------------------
+    # Without headers
 
     def test_get_movies_with_NO_HEADERS(self):
         res = self.client().get('/movies')
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
     def test_post_movies_with_NO_HEADERS(self):
         res = self.client().post('/movies', json={
-            'title': 'The Movie 4',
-            'year': 2017
+            'title': 'Added movie',
+            'year': 3030
         })
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
     def test_patch_movies_with_NO_HEADERS(self):
         res = self.client().patch('/movies/4', json={
-            'title': 'The Movie 4',
-            'year': 2018
+            'title': 'edited movie',
+            'year': 3030
         })
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
-
-    def test_get_movies_with_NO_HEADERS(self):
-        res = self.client().get('/movies/4')
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
     def test_delete_movies_with_NO_HEADERS(self):
         res = self.client().delete('/movies/4')
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(body['error'], 'Authorization header is expected.')
+        self.assertEqual(body['message'], 'no_authorization_header')
 
-# ---------------------------------------------------------------------------------
-# ------------------------------- PRODUCER MOVIES ---------------------------------
-# ---------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # Executive Producer role
 
     def test_get_movies(self):
         res = self.client().get(
@@ -362,11 +315,6 @@ class CastingAgencyCase(unittest.TestCase):
         self.assertEqual(body['success'], True)
         self.assertEqual(isinstance(movies, list), True)
 
-    def test_get_movies(self):
-        res = self.client().get('/movies/2', headers=self.prod_headers)
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(body['success'], True)
 
     def test_delete_movies(self):
         res = self.client().delete('/movies/2', headers=self.prod_headers)
@@ -374,9 +322,8 @@ class CastingAgencyCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-# ---------------------------------------------------------------------------------
-# ------------------------------- DIRECTOR MOVIES ---------------------------------
-# ---------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # Casting Director role
 
     def test_get_movies(self):
         res = self.client().get(
@@ -408,21 +355,14 @@ class CastingAgencyCase(unittest.TestCase):
         self.assertEqual(body['success'], True)
         self.assertEqual(isinstance(movies, list), True)
 
-    def test_get_movies(self):
-        res = self.client().get('/movies/2', headers=self.dir_headers)
-        body = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(body['success'], True)
-
     def test_delete_movies(self):
         """ FAILS: 401 - UNAUTHORIZED """
         res = self.client().delete('/movies/2', headers=self.dir_headers)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
 
-# ---------------------------------------------------------------------------------
-# ------------------------------ ASSISTANT MOVIES ---------------------------------
-# ---------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # Casting Assistant role
 
     def test_get_movies(self):
         res = self.client().get(
@@ -453,15 +393,122 @@ class CastingAgencyCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
 
-    def test_get_movies(self):
-        res = self.client().get('/movies/2', headers=self.asst_headers)
+    def test_delete_movies(self):
+        """ FAILS: 401 - UNAUTHORIZED """
+        res = self.client().delete('/movies/2', headers=self.asst_headers)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+
+# ---------------------------------------------------------------------------------
+# MOVIE_ACTORS
+# ---------------------------------------------------------------------------------
+
+    # -----------------------------------------------------------------------------
+    # Without headers
+
+    def test_get_ators_by_movie_with_NO_HEADERS(self):
+        res = self.client().get('/movies/2/actors')
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['message'], 'no_authorization_header')
+
+    def test_assgin_ators_by_movie_with_NO_HEADERS(self):
+        res = self.client().post('/movies/2/actors', json={
+            'actor_id': '1'
+        })
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['message'], 'no_authorization_header')
+
+    def test_remove_ators_by_movie_with_NO_HEADERS(self):
+        res = self.client().delete('/movies/2/actors', json={
+            'actor_id': '1'
+        })
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['message'], 'no_authorization_header')
+
+    # -----------------------------------------------------------------------------
+    # Executive Producer role
+
+    def test_get_ators_by_movie(self):
+        res = self.client().get(
+            '/movies/2/actors', headers=self.prod_headers)
+
+        body = json.loads(res.data)
+        actors = body['actors']
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+        self.assertEqual(isinstance(actors, list), True)
+
+    def test_post_ators_by_movie(self):
+        res = self.client().post('/movies/2/actors', headers=self.prod_headers, json={
+            'actor_id': '1'
+        })
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    def test_delete_movies(self):
+
+    def test_delete_ators_by_movie(self):
+        res = self.client().delete('/movies/2/actors', headers=self.prod_headers)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
+    # -----------------------------------------------------------------------------
+    # Casting Director role
+
+    def test_get_ators_by_movie(self):
+        res = self.client().get(
+            '/movies/2/actors', headers=self.dir_headers)
+
+        body = json.loads(res.data)
+        actors = body['actors']
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+        self.assertEqual(isinstance(actors, list), True)
+
+    def test_post_ators_by_movie(self):
+        res = self.client().post('/movies/2/actors', headers=self.dir_headers, json={
+            'actor_id': '1'
+        })
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
+
+    def test_delete_ators_by_movie(self):
+        res = self.client().delete('/movies/2/actors', headers=self.dir_headers)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
+    # -----------------------------------------------------------------------------
+    # Casting Assistant role
+
+    def test_get_ators_by_movie(self):
+        res = self.client().get(
+            '/movies/2/actors', headers=self.asst_headers)
+
+        body = json.loads(res.data)
+        actors = body['actors']
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+        self.assertEqual(isinstance(actors, list), True)
+
+    def test_post_ators_by_movie(self):
         """ FAILS: 401 - UNAUTHORIZED """
-        res = self.client().delete('/movies/2', headers=self.asst_headers)
+        res = self.client().post('/movies/2/actors', headers=self.asst_headers, json={
+            'actor_id': '1'
+        })
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+
+
+    def test_delete_ators_by_movie(self):
+        """ FAILS: 401 - UNAUTHORIZED """
+        res = self.client().delete('/movies/2/actors', headers=self.asst_headers)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
 
