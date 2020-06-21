@@ -1,13 +1,15 @@
+
 import os
 from sqlalchemy import Column, String, Integer, Date, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-# database_path = os.environ['DATABASE_URL']
-database_name = "test"
-password = '12'
-database_path = "postgres://postgres:{}@{}/{}".format(password,
-                                                      'localhost:5432', database_name)
+database_path = os.environ['DATABASE_URL']
+
+# database_name = "test"
+# password = '12'
+# database_path = "postgres://postgres:{}@{}/{}".format(password,
+#                                                       'localhost:5432', database_name)
 db = SQLAlchemy()
 
 '''
@@ -61,7 +63,6 @@ movies_actors = db.Table(
 
 '''
 Actor
-
 '''
 
 
@@ -100,7 +101,6 @@ class Actor (db.Model):
 
 '''
 Movie
-
 '''
 
 
