@@ -40,7 +40,7 @@ EXCITED = os.environ['EXCITED']
 def create_app(test_config=None):
 
     #----------------------------------------------------------------------------#
-    # Conf.
+    # CONFIG.
     #----------------------------------------------------------------------------#
     app = Flask(__name__)
     setup_db(app)
@@ -54,7 +54,7 @@ def create_app(test_config=None):
     insert_data()
 
 #----------------------------------------------------------------------------#
-# Routes.
+# ROUTES.
 #----------------------------------------------------------------------------#
 
     #----------------------------------------------------------------------------#
@@ -381,7 +381,7 @@ def create_app(test_config=None):
         })
 
 #----------------------------------------------------------------------------#
-# Errors.
+# ERRORS.
 #----------------------------------------------------------------------------#
     @app.errorhandler(400)
     def bad_request(error):
@@ -436,7 +436,8 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": AuthError.status_code,
-            "message": AuthError.error["code"]
+            "message": AuthError.error["code"],
+            # "description": AuthError.error["description"]
         }), AuthError.status_code
 
     return app
