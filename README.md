@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Casting-Agency is the fifth and the final project in Udacity nanodgree. It models a company that is responsible for creating movies and managing and assigning actors to those movies. The user can intract with the database useing the API to prform CRUD .The user must have permissions to prform these oparation.the permissions are manged by [Auth0](https://auth0.com/).
+Casting-Agency is the fifth and the final project in Udacity nanodgree. It models a company that is responsible for creating movies and managing and assigning actors to those movies. The user can intract with the database useing the API to prform CRUD .The user must have permissions to prform these oparation.the permissions are manged by [Auth0](https://auth0.com/).\
 
 The API is doploued in [Heroku](https://dashboard.heroku.com/) in the folowing base URL :
 
@@ -26,7 +26,7 @@ We recommend working within a virtual environment whenever using Python for proj
 
 #### PIP Dependencies
 
-Once you have your virtual environment setup and running, install dependencies by naviging to the `/fsnd-capstone` directory and running:
+Once you have your virtual environment setup and running, install dependencies by naviging to the `/fsnd-capstone` directory and running:\
 
 ```bash
 pip install -r requirements.txt
@@ -45,7 +45,7 @@ If you want to use tha API localy .
 
 ## Running the server
 
-From within the `fsnd-capstone` directory first ensure you are working using your created virtual environment.
+From within the `fsnd-capstone` directory first ensure you are working using your created virtual environment.\
 
 To run the server, execute:
 
@@ -62,9 +62,9 @@ you can test the endpoint using Unittest or Postman.
 
 ### Unittest
 
-tests for the endpoint are in test_app.py
+tests for the endpoint are in test_app.py\
 
-first you neeed to create a database and name it 'test'
+first you neeed to create a database and name it 'test'\
 To run the tests, run
 
 ```
@@ -104,11 +104,11 @@ Errors are returned as JSON objects in the following format:
 
 The API will return three error types when requests fail:
 
-400: Bad Request
-401: Unauthorized
-404: Resource Not Found
-405: Method Not Allowed
-422: Not Processable
+400: Bad Request\
+401: Unauthorized\
+404: Resource Not Found\
+405: Method Not Allowed\
+422: Not Processable\
 
 500: Internal Server Error
 
@@ -122,9 +122,9 @@ The folowing tests will assume that the access token is porvided with each requa
 
 #### Actors
 
-GET /actors
-General:
-Returns a list of actors objects , success value and the number of actors
+GET /actors\
+General:\
+Returns a list of actors objects , success value and the number of actors\
 Sample: curl https://casting-agency-fsnd-project.herokuapp.com/actors
 
 ```bash
@@ -154,9 +154,9 @@ Sample: curl https://casting-agency-fsnd-project.herokuapp.com/actors
 }
 ```
 
-POST /actors
-General:
-Creates a new actor using the provided name, birth_year and gender. Returns an array contans the actor created and success value.
+POST /actors\
+General:\
+Creates a new actor using the provided name, birth_year and gender. Returns an array contans the actor created and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/actors -X POST -H "Content-Type: application/json" -d '{
 "name": "Added Actor",
 "birth_year": 100,
@@ -178,9 +178,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com/actors -X POST -H "Conten
 
 ```
 
-PATCH /actors/{int:actor_id}
-General:
-modify the actor with the id = actor_id using the provided name, birth_year or gender. Returns an array contans the actor modified and success value.
+PATCH /actors/{int:actor_id}\
+General:\
+modify the actor with the id = actor_id using the provided name, birth_year or gender. Returns an array contans the actor modified and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/actors/5 -X PATCH -H "Content-Type: application/json" -d '{
 "name": "Edited Actor",
 "gender": "m"
@@ -201,9 +201,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com/actors/5 -X PATCH -H "Con
 
 ```
 
-DELETE /actors/{int:actor_id}
-General:
-Deletes the actors with the provided ID .Returns an array contans the actor and success value.
+DELETE /actors/{int:actor_id}\
+General:\
+Deletes the actors with the provided ID .Returns an array contans the actor and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com//movies/5 -X DELETE -H "Content-Type: application/json"
 
 ```bash
@@ -222,9 +222,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com//movies/5 -X DELETE -H "C
 
 #### Movie
 
-GET /movie
-General:
-Returns a list of movie objects , success value and the number of movies
+GET /movie\
+General:\
+Returns a list of movie objects , success value and the number of movies\
 Sample: curl https://casting-agency-fsnd-project.herokuapp.com/movies
 
 ```bash
@@ -251,9 +251,9 @@ Sample: curl https://casting-agency-fsnd-project.herokuapp.com/movies
 }
 ```
 
-POST /movies
-General:
-Creates a new actor using the provided name, birth_year and gender. Returns an array contans the actor created and success value.
+POST /movies\
+General:\
+Creates a new actor using the provided name, birth_year and gender. Returns an array contans the actor created and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/movies -X POST -H "Content-Type: application/json" -d '{
 "title": "added movie",
 "release_date": "2000-01-20"
@@ -273,9 +273,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com/movies -X POST -H "Conten
 
 ```
 
-PATCH /movies/{int:movie_id}
-General:
-modify the movie with the id = movie_id using the provided release_date or title. Returns an array contans the movie modified and success value.
+PATCH /movies/{int:movie_id}\
+General:\
+modify the movie with the id = movie_id using the provided release_date or title. Returns an array contans the movie modified and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/movies/4 -X PATCH -H "Content-Type: application/json" -d '{
 "title": "edited movie",
 "release_date": "3000-02-01"
@@ -295,9 +295,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com/movies/4 -X PATCH -H "Con
 
 ```
 
-DELETE /movies/{int:movie_id}
-General:
-Deletes the movie with the provided ID .Returns an array contans the movie and success value.
+DELETE /movies/{int:movie_id}\
+General:\
+Deletes the movie with the provided ID .Returns an array contans the movie and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/movie/4 -X DELETE -H "Content-Type: application/json"
 
 ```bash
@@ -315,9 +315,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com/movie/4 -X DELETE -H "Con
 
 #### Actors in a Movie
 
-GET /movies/{int:movie_id}/actors
-General:
-Returns a list of actors objects assgined to a movie with id = to movie_id, success value and the number of actors
+GET /movies/{int:movie_id}/actors\
+General:\
+Returns a list of actors objects assgined to a movie with id = to movie_id, success value and the number of actors\
 Sample: curl https://casting-agency-fsnd-project.herokuapp.com/movies/2/actors
 
 ```bash
@@ -335,9 +335,9 @@ Sample: curl https://casting-agency-fsnd-project.herokuapp.com/movies/2/actors
 }
 ```
 
-POST /movies/{int:movie_id}/actors
-General:
-assgin the actor with the id provided to the movie with the id = movie_id . Returns an array contans the actor assgined and success value.
+POST /movies/{int:movie_id}/actors\
+General:\
+assgin the actor with the id provided to the movie with the id = movie_id . Returns an array contans the actor assgined and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/movies/2/actors -X POST -H "Content-Type: application/json" -d '{
 "actor_id": "1"
 }'
@@ -357,9 +357,9 @@ curl https://casting-agency-fsnd-project.herokuapp.com/movies/2/actors -X POST -
 
 ```
 
-DELETE /movies/{int:movie_id}/actors
-General:
-remove the actor with the id provided from working in the movie with the id = movie_id . Returns an array contans the actor removed and success value.
+DELETE /movies/{int:movie_id}/actors\
+General:\
+remove the actor with the id provided from working in the movie with the id = movie_id . Returns an array contans the actor removed and success value.\
 curl https://casting-agency-fsnd-project.herokuapp.com/movies/2/actors -X DELETE -H "Content-Type: application/json" -d '{
 "actor_id": "1"
 }'
