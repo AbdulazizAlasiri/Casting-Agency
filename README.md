@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Casting-Agency is the fifth and the final project in Udacity nanodgree. It models a company that is responsible for creating movies and managing and assigning actors to those movies. The user can intract with the database useing the API to prform CRUD .The user must have permissions to prform these oparation.the permissions are manged by [Auth0](https://auth0.com/).\
+Casting-Agency is the fifth and the final project in Udacity nanodgree. It models a company that is responsible for creating movies and managing and assigning actors to those movies. The user can intract with the database useing the API to prform CRUD .The user must have permissions to prform these oparation.the permissions are manged by [Auth0](https://auth0.com/).
 
 The API is doploued in [Heroku](https://dashboard.heroku.com/) in the folowing base URL :
 
@@ -26,7 +26,7 @@ We recommend working within a virtual environment whenever using Python for proj
 
 #### PIP Dependencies
 
-Once you have your virtual environment setup and running, install dependencies by naviging to the `/fsnd-capstone` directory and running:\
+Once you have your virtual environment setup and running, install dependencies by naviging to the `/fsnd-capstone` directory and running:
 
 ```bash
 pip install -r requirements.txt
@@ -45,7 +45,7 @@ If you want to use tha API localy .
 
 ## Running the server
 
-From within the `fsnd-capstone` directory first ensure you are working using your created virtual environment.\
+From within the `fsnd-capstone` directory first ensure you are working using your created virtual environment.
 
 To run the server, execute:
 
@@ -62,7 +62,7 @@ you can test the endpoint using Unittest or Postman.
 
 ### Unittest
 
-tests for the endpoint are in test_app.py\
+tests for the endpoint are in test_app.py
 
 first you neeed to create a database and name it 'test'\
 To run the tests, run
@@ -83,7 +83,7 @@ To test the endpoint in [Heroku](https://dashboard.heroku.com/) :
 
 ### Geting Starting
 
-Base URL:this app can be run locally using the base URL as http://127.0.0.1:5000/,or you can use hosted URL https://casting-agency-fsnd-project.herokuapp.com .
+Base URL:this app can be run locally using the base URL as http://127.0.0.1:5000/,or you can use hosted URL https://casting-agency-fsnd-project.herokuapp.com .\
 Authentication: This version of the application does not have frontend to authnticate users , to use the endpoints you need to provaied a valid Bearer access token,given in setup.sh or by using the folowing token :
 
 ```bash
@@ -108,7 +108,7 @@ The API will return three error types when requests fail:
 401: Unauthorized\
 404: Resource Not Found\
 405: Method Not Allowed\
-422: Not Processable\
+422: Not Processable
 
 500: Internal Server Error
 
