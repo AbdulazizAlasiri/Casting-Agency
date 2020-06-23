@@ -39,9 +39,9 @@ This will install all of the required packages we selected within the `requireme
 If you want to use tha API localy .
 
 1. With postgres runing , Create a database with any name.
-2. Encomant line 9 to 12 in models.py
-3. modefay the database name and the password to your database name and password
-4. encomant line 53 and 54 in app.py to create the tables and insert some data to the database
+2. Uncomment line 9 to 12 in models.py
+3. Modify the database name and the password to your database name and password
+4. Uncomment line 53 and 54 in app.py to create the tables and insert some data to the database
 
 ## Running the server
 
